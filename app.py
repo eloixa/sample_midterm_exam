@@ -1,19 +1,22 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from database import db
+from models import User, Record
 
 app = Flask(__name__)
 
-# [API-02] Configure the SQLite database
-# This will create a file named 'mini_management.db' in your root folder later
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mini_management.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize the database tool
-db = SQLAlchemy(app)
+# Connect the db to this specific app
+db.init_app(app)
+
+# Generate the actual database file and tables
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def home():
-    return "API-02: Database connection configured!"
+    return "API-03: Database tables created successfully!"
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
